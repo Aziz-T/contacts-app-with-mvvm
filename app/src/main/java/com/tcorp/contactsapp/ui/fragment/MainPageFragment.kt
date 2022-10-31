@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
+import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tcorp.contactsapp.R
@@ -19,24 +20,19 @@ import com.tcorp.contactsapp.ui.adapters.ContactListAdapter
 class MainPageFragment : Fragment(),SearchView.OnQueryTextListener {
 
     private lateinit var mainPageBinding: FragmentMainPageBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
 
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        mainPageBinding = FragmentMainPageBinding.inflate(inflater,container,false )
+        mainPageBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_main_page,container,false )
+        mainPageBinding.mainPageFragment = this
+        mainPageBinding.mainPageToolbarTitle = "Kişiler"
 
-        mainPageBinding.toolbarMainPage?.title = "Kişiler"
         (activity as AppCompatActivity).setSupportActionBar(mainPageBinding.toolbarMainPage)
 
-        mainPageBinding.recyclerView?.layoutManager = LinearLayoutManager(requireContext())
 
         val contactList = ArrayList<Contacts>()
         contactList.add(Contacts(1,"Ahmet","53435345434"))
@@ -44,19 +40,9 @@ class MainPageFragment : Fragment(),SearchView.OnQueryTextListener {
         contactList.add(Contacts(1,"Ahmet","53435345434"))
         contactList.add(Contacts(1,"Ahmet","53435345434"))
         contactList.add(Contacts(1,"Ahmet","53435345434"))
-
         val adapter = ContactListAdapter(requireContext(),contactList)
-        mainPageBinding.recyclerView?.adapter = adapter
+        mainPageBinding.adapter = adapter
 
-
-
-
-        mainPageBinding.floatingActionButton?.setOnClickListener {
-
-            Log.d("button basma ", "lol")
-            Navigation.findNavController(it).navigate(R.id.action_mainPageFragment_to_registerContactFragment)
-
-         }
 
 
         requireActivity().addMenuProvider(object : MenuProvider{
@@ -77,6 +63,11 @@ class MainPageFragment : Fragment(),SearchView.OnQueryTextListener {
 
 
         return mainPageBinding.root
+    }
+
+    fun navigatePage(it:View){
+        Log.d("button basma ", "lol")
+        Navigation.findNavController(it).navigate(R.id.action_mainPageFragment_to_registerContactFragment)
     }
 
     override fun onQueryTextSubmit(p0: String?): Boolean {

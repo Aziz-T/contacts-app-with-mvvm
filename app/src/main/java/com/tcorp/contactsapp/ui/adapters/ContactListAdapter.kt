@@ -5,9 +5,11 @@ import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.tcorp.contactsapp.R
 import com.tcorp.contactsapp.data.entity.Contacts
 import com.tcorp.contactsapp.databinding.CardItemBinding
 import com.tcorp.contactsapp.ui.fragment.MainPageFragmentDirections
@@ -18,14 +20,16 @@ class ContactListAdapter(var mContext: Context, var contactList:List<Contacts>):
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardDesignHolder {
         val layoutInflater = LayoutInflater.from(mContext)
-        val cardBinding = CardItemBinding.inflate(layoutInflater,parent,false)
+        val cardBinding:CardItemBinding= DataBindingUtil.inflate(layoutInflater,
+            R.layout.card_item,parent,false)
         return CardDesignHolder(cardBinding)
     }
 
     override fun onBindViewHolder(holder: CardDesignHolder, position: Int) {
         val t = holder.binding
         val item = contactList.get(position)
-        t.textViewInfo.text = "${item.contact_name} - ${item.contact_phone}"
+        t.contactModel = item
+
 
         t.cardView.setOnClickListener{
             val navigator = MainPageFragmentDirections.actionMainPageFragmentToRegisterDetailFragment(item)
